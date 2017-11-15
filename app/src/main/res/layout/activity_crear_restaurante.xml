@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="net.ciprianlungu.agenciaderestaurantes.gui.CrearRestauranteActivity">
+
+    <EditText
+        android:id="@+id/etNombre"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="Nombre del restaurante"/>
+
+    <EditText
+        android:id="@+id/etTelefono"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="number"
+        android:hint="Teléfono"/>
+
+    <EditText
+        android:id="@+id/etPostal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="number"
+        android:hint="Código postal"/>
+
+    <EditText
+        android:id="@+id/etEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textEmailAddress"
+        android:hint="Correo electrónico"/>
+
+    <Button
+        android:id="@+id/bAddFoto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="addFoto"
+        android:text="Añadir foto" />
+
+    <ImageView
+        android:id="@+id/view_imagen"
+        android:layout_width="match_parent"
+        android:layout_height="189dp" />
+
+    <Button
+        android:id="@+id/bAddRestaurante"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:onClick="addRestaurante"
+        android:text="Añadir restaurante" />
+</LinearLayout>
