@@ -1,17 +1,19 @@
 package net.ciprianlungu.agenciaderestaurantes.modelo;
 
+import android.util.Log;
+
 /**
  * Created by Lionkyde on 15-Nov-17.
  */
 
 public class Restaurante {
     public String nombre;
-    public byte[] imagen;
+    public String imagen;
     public int telefono;
     public int postal;
     public String email;
 
-    public Restaurante(String nombre, byte[] imagen, int telefono, int postal, String email) {
+    public Restaurante(String nombre, String imagen, int telefono, int postal, String email) {
         this.nombre = nombre;
         this.imagen = imagen;
         this.telefono = telefono;
@@ -27,11 +29,11 @@ public class Restaurante {
         this.nombre = nombre;
     }
 
-    public byte[] getImagen() {
+    public String getImagen() {
         return imagen;
     }
 
-    public void setImagen(byte[] imagen) {
+    public void setImagen(String imagen) {
         this.imagen = imagen;
     }
 
@@ -58,4 +60,18 @@ public class Restaurante {
     public void setEmail(String email) {
         this.email = email;
     }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

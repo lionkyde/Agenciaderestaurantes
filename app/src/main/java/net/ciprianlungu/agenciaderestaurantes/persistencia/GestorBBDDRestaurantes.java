@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import net.ciprianlungu.agenciaderestaurantes.modelo.Restaurante;
 
@@ -30,7 +31,10 @@ public class GestorBBDDRestaurantes {
         cv.put(DatabaseHelper.COLUMNAS[4],r.getPostal());
         cv.put(DatabaseHelper.COLUMNAS[5],r.getEmail());
 
+
+        Log.d("gestorbbdd","recibiendo datos...");
         sqLiteDatabase.insert(DatabaseHelper.TABLA_RESTAURANTES,null,cv);
+        Log.d("gestorbbdd","acabo de meter en base de datos");
         sqLiteDatabase.close();
     }
     //RECIBIR TODOS LOS RESTAURANTES
@@ -42,4 +46,7 @@ public class GestorBBDDRestaurantes {
     public void cerrar(){
         dh.close();
     }
+
+    //TODO HABRÁ QUE METER AL MENOS UN RESTAURANTE, PORQUE SI NO METEMOS SALE ERROR DE NULL DEL CURSOR AL HACER CONSULTA. Y SE APAGA EL PROGRAMA.
+    //TODO FALTA RECOGER LOS DATOS Y MOSTRARLO EN CADA LISTA.
 }
