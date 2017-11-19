@@ -8,14 +8,17 @@ import android.graphics.Bitmap;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,28 +30,46 @@ import net.ciprianlungu.agenciaderestaurantes.persistencia.GestorBBDDRestaurante
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 public class CrearRestauranteActivity extends AppCompatActivity {
     private static final int REQUEST_CAMERA = 1;
     private static final int REQUEST_PERMISOS = 2;
     ExternalFileManager efm;
-    GestorBBDDRestaurantes gr;
     RestaurantesAdapter ra;
-
+    GestorBBDDRestaurantes gr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crear_restaurante);
         efm = new ExternalFileManager();
-        gr = new GestorBBDDRestaurantes(this);
-        //Cursor cursor = gr.getRestaurantes();
+        getSupportActionBar().setHomeButtonEnabled(true);
 
-        //Log.d("cursor",cursor.getString(1));
 
-        //ListView lvListaRestaurantes = (ListView)findViewById(R.id.lvListaPersonas);
-        //ra = new RestaurantesAdapter(this,cursor);
-        //lvListaRestaurantes.setAdapter(ra);
+
+         /* if(cursor != null){ //COMPROBAMOS QUE EL CURSOR NO ESTÁ VACIO
+
+            ListView lvListaRestaurantes = (ListView)findViewById(R.id.lvListaPersonas);
+            ra = new RestaurantesAdapter(this,cursor);
+            Log.d("cursor","Despues de setAdapter");
+            lvListaRestaurantes.setAdapter(ra);
+
+
+
+
+
+        }else{
+
+            Log.d("cursor","El cursor está vacio");
+        } */
+
+
+
+
+
+
+
 
     }
 
@@ -96,8 +117,12 @@ public class CrearRestauranteActivity extends AppCompatActivity {
         ImageView iv_imagen = (ImageView)findViewById(R.id.view_imagen);
 
         try{
+            gr = new GestorBBDDRestaurantes(this);
             Restaurante restaurante = new Restaurante(etNombre.getText().toString(),efm.fichero.getAbsolutePath(),Integer.parseInt(etTelefono.getText().toString()),
                                                         Integer.parseInt(etPostal.getText().toString()),etEmail.getText().toString());
+
+            Log.d("EXCEPTIONBBDD","persona creada"+etNombre.getText().toString()+efm.fichero.getAbsolutePath()+Integer.parseInt(etTelefono.getText().toString())+
+                    Integer.parseInt(etPostal.getText().toString())+etEmail.getText().toString());
             gr.insertarRestaurante(restaurante);
 
             etNombre.setText("");
@@ -112,6 +137,7 @@ public class CrearRestauranteActivity extends AppCompatActivity {
         }catch (Exception e){
             Toast.makeText(this,"Ha ocurrido un error al insertar el restaurante",
                     Toast.LENGTH_SHORT).show();
+            Log.d("EXCEPTIONBBDD","exception",e);
         }
 
 
@@ -164,8 +190,17 @@ public class CrearRestauranteActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        gr.cerrar();
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+
+            case android.R.id.home:
+                Log.d("menu","elegido el item android home");
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
     }
+
 }

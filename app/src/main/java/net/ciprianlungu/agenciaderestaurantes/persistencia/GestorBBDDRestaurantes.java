@@ -22,6 +22,7 @@ public class GestorBBDDRestaurantes {
 
     //PARA AÑADIR RESTAURANTES
     public void insertarRestaurante(Restaurante r){
+        Log.d("EXCEPTIONBBDD","He recibido los parametros"+r.getNombre()+r.getImagen()+r.getPostal()+r.getTelefono()+r.getEmail());
         SQLiteDatabase sqLiteDatabase = dh.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
@@ -47,6 +48,4 @@ public class GestorBBDDRestaurantes {
         dh.close();
     }
 
-    //TODO HABRÁ QUE METER AL MENOS UN RESTAURANTE, PORQUE SI NO METEMOS SALE ERROR DE NULL DEL CURSOR AL HACER CONSULTA. Y SE APAGA EL PROGRAMA.
-    //TODO FALTA RECOGER LOS DATOS Y MOSTRARLO EN CADA LISTA.
 }
