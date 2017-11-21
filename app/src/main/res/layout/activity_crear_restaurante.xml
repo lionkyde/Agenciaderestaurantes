@@ -24,12 +24,12 @@
         android:hint="Teléfono"/>
 
     <EditText
-        android:id="@+id/etPostal"
+        android:id="@+id/etDireccion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="number"
-        android:hint="Código postal"/>
+        android:hint="Dirección postal"
+        android:inputType="textPostalAddress" />
 
     <EditText
         android:id="@+id/etEmail"

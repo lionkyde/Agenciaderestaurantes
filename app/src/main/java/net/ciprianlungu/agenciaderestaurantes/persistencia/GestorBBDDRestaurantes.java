@@ -22,14 +22,14 @@ public class GestorBBDDRestaurantes {
 
     //PARA AÑADIR RESTAURANTES
     public void insertarRestaurante(Restaurante r){
-        Log.d("EXCEPTIONBBDD","He recibido los parametros"+r.getNombre()+r.getImagen()+r.getPostal()+r.getTelefono()+r.getEmail());
+        Log.d("EXCEPTIONBBDD","He recibido los parametros"+r.getNombre()+r.getImagen()+r.getDireccion()+r.getTelefono()+r.getEmail());
         SQLiteDatabase sqLiteDatabase = dh.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
         cv.put(DatabaseHelper.COLUMNAS[1],r.getNombre());
         cv.put(DatabaseHelper.COLUMNAS[2],r.getImagen());
         cv.put(DatabaseHelper.COLUMNAS[3],r.getTelefono());
-        cv.put(DatabaseHelper.COLUMNAS[4],r.getPostal());
+        cv.put(DatabaseHelper.COLUMNAS[4],r.getDireccion());
         cv.put(DatabaseHelper.COLUMNAS[5],r.getEmail());
 
 

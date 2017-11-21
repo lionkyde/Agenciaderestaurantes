@@ -10,10 +10,10 @@ import android.util.Log;
  */
 
 public class DatabaseHelper extends SQLiteOpenHelper {
-    private static final String NOMBRE_DATABASE = "restaurantes";
+    private static final String NOMBRE_DATABASE = "database_restaurantes";
     private static final int VERSION = 1;
     public static final String TABLA_RESTAURANTES = "T_RESTAURANTE";
-    public static final String[] COLUMNAS = new String[] {"_id","nombre","ruta_imagen","telefono","postal","email"};
+    public static final String[] COLUMNAS = new String[] {"_id","nombre","ruta_imagen","telefono","direccion","email"};
 
     public DatabaseHelper(Context context) {
 
@@ -24,7 +24,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         String crearTabla_restaurantes="CREATE TABLE "+TABLA_RESTAURANTES
                 +" (_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "nombre TEXT,ruta_imagen TEXT , telefono INTEGER, postal INTEGER, email TEXT ) ";
+                "nombre TEXT,ruta_imagen TEXT , telefono INTEGER, direccion TEXT, email TEXT ) ";
         sqLiteDatabase.execSQL(crearTabla_restaurantes);
 
         Log.d("bbdd","BASE DE DATOS CREADA.TABLA "+TABLA_RESTAURANTES+" creada.");
@@ -33,6 +33,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        //NO HAY VERSION
+
     }
 }

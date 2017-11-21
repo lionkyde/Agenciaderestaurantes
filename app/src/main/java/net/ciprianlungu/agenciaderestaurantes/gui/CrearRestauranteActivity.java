@@ -45,32 +45,6 @@ public class CrearRestauranteActivity extends AppCompatActivity {
         setContentView(R.layout.activity_crear_restaurante);
         efm = new ExternalFileManager();
         getSupportActionBar().setHomeButtonEnabled(true);
-
-
-
-         /* if(cursor != null){ //COMPROBAMOS QUE EL CURSOR NO ESTÁ VACIO
-
-            ListView lvListaRestaurantes = (ListView)findViewById(R.id.lvListaPersonas);
-            ra = new RestaurantesAdapter(this,cursor);
-            Log.d("cursor","Despues de setAdapter");
-            lvListaRestaurantes.setAdapter(ra);
-
-
-
-
-
-        }else{
-
-            Log.d("cursor","El cursor está vacio");
-        } */
-
-
-
-
-
-
-
-
     }
 
     public void addFoto(View view) {
@@ -113,22 +87,22 @@ public class CrearRestauranteActivity extends AppCompatActivity {
         EditText etNombre = (EditText)findViewById(R.id.etNombre);
         EditText etTelefono = (EditText)findViewById(R.id.etTelefono);
         EditText etEmail = (EditText)findViewById(R.id.etEmail);
-        EditText etPostal = (EditText)findViewById(R.id.etPostal);
+        EditText etDireccion = (EditText)findViewById(R.id.etDireccion);
         ImageView iv_imagen = (ImageView)findViewById(R.id.view_imagen);
 
         try{
             gr = new GestorBBDDRestaurantes(this);
             Restaurante restaurante = new Restaurante(etNombre.getText().toString(),efm.fichero.getAbsolutePath(),Integer.parseInt(etTelefono.getText().toString()),
-                                                        Integer.parseInt(etPostal.getText().toString()),etEmail.getText().toString());
+                    etDireccion.getText().toString(),etEmail.getText().toString());
 
             Log.d("EXCEPTIONBBDD","persona creada"+etNombre.getText().toString()+efm.fichero.getAbsolutePath()+Integer.parseInt(etTelefono.getText().toString())+
-                    Integer.parseInt(etPostal.getText().toString())+etEmail.getText().toString());
+                    etDireccion.getText().toString()+etEmail.getText().toString());
             gr.insertarRestaurante(restaurante);
 
             etNombre.setText("");
             etTelefono.setText("");
             etEmail.setText("");
-            etPostal.setText("");
+            etDireccion.setText("");
             iv_imagen.setImageDrawable(null);
 
             //ra.changeCursor(gr.getRestaurantes());

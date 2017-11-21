@@ -10,15 +10,23 @@ public class Restaurante {
     public String nombre;
     public String imagen;
     public int telefono;
-    public int postal;
+    public String direccion;
     public String email;
 
-    public Restaurante(String nombre, String imagen, int telefono, int postal, String email) {
+    public Restaurante(String nombre, String imagen, int telefono, String direccion, String email) {
         this.nombre = nombre;
         this.imagen = imagen;
         this.telefono = telefono;
-        this.postal = postal;
+        this.direccion = direccion;
         this.email = email;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
     }
 
     public String getNombre() {
@@ -43,14 +51,6 @@ public class Restaurante {
 
     public void setTelefono(int telefono) {
         this.telefono = telefono;
-    }
-
-    public int getPostal() {
-        return postal;
-    }
-
-    public void setPostal(int postal) {
-        this.postal = postal;
     }
 
     public String getEmail() {

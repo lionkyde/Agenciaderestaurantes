@@ -2,7 +2,12 @@ package net.ciprianlungu.agenciaderestaurantes.adaptadores;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.Image;
+import android.os.Environment;
 import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +18,8 @@ import android.widget.TextView;
 import net.ciprianlungu.agenciaderestaurantes.R;
 
 import org.w3c.dom.Text;
+
+import java.io.File;
 
 
 /**
@@ -32,6 +39,15 @@ public class RestaurantesAdapter extends CursorAdapter{
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         TextView tvNombre = (TextView)view.findViewById(R.id.tvNombre);
+        ImageView imageview = (ImageView)view.findViewById(R.id.view_imagen);
         tvNombre.setText(cursor.getString(1));
+
+        File imagen = new File(cursor.getString(2));
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        Bitmap bitmap = BitmapFactory.decodeFile(imagen.getAbsolutePath(),bmOptions);
+        imageview.setImageBitmap(bitmap);
+
+
+
     }
 }
