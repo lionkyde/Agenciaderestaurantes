@@ -108,12 +108,14 @@ public class CrearRestauranteActivity extends AppCompatActivity {
             //ra.changeCursor(gr.getRestaurantes());
             //ra.notifyDataSetChanged();
             Toast.makeText(this, "Restaurante insertado correctamente.", Toast.LENGTH_SHORT).show();
-        }catch (Exception e){
+        } catch (NumberFormatException e){
+            Toast.makeText(this,"Formato de telefono incorrecto",
+                    Toast.LENGTH_SHORT).show();
+        } catch (Exception e){
             Toast.makeText(this,"Ha ocurrido un error al insertar el restaurante",
                     Toast.LENGTH_SHORT).show();
             Log.d("EXCEPTIONBBDD","exception",e);
         }
-
 
 
     }

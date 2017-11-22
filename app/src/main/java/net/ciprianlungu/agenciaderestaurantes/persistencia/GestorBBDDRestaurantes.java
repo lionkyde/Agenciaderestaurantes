@@ -44,6 +44,13 @@ public class GestorBBDDRestaurantes {
         Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM "+DatabaseHelper.TABLA_RESTAURANTES, new String[] {});
         return c;
     }
+
+    public Cursor getRestaurante(long id){
+        SQLiteDatabase sqLiteDatabase = dh.getReadableDatabase();
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + DatabaseHelper.TABLA_RESTAURANTES + " WHERE "+DatabaseHelper.COLUMNAS[0] +" = "+id, new String[]{});
+
+        return cursor;
+    }
     public void cerrar(){
         dh.close();
     }

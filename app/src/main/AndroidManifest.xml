@@ -31,7 +31,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".gui.PrincipalActivity" />
         </activity>
-        <activity android:name=".gui.DetallesRestaurante"></activity>
+        <activity
+            android:name=".gui.DetallesRestaurante"
+            android:parentActivityName=".gui.PrincipalActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".gui.PrincipalActivity" />
+
+        </activity>
     </application>
 
 </manifest>
