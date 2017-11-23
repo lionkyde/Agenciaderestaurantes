@@ -57,12 +57,14 @@
             android:id="@+id/bAnterior"
             android:layout_width="189dp"
             android:layout_height="82dp"
+            android:onClick="anterior"
             android:text="Anterior" />
 
         <Button
             android:id="@+id/bSiguiente"
             android:layout_width="196dp"
             android:layout_height="80dp"
+            android:onClick="siguiente"
             android:text="Siguiente" />
 
     </LinearLayout>
@@ -76,6 +78,7 @@
             android:id="@+id/bLlamar"
             android:layout_width="match_parent"
             android:layout_height="73dp"
+            android:onClick="llamar"
             android:text="LLamar" />
     </LinearLayout>
 </LinearLayout>
