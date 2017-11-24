@@ -3,6 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/detalles_item_map"
+        android:icon="@android:drawable/ic_dialog_map"
+        android:title="Ubicacion" />
+    <item
         android:id="@+id/action_share"
         android:icon="@android:drawable/ic_menu_share"
         android:title="Compartir"

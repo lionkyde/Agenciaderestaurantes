@@ -206,12 +206,22 @@ public class DetallesRestaurante extends AppCompatActivity implements SensorEven
             case R.id.action_delete:
                 AlertDialog dialogo = dialogoBorrado();
                 dialogo.show();
-
-
+                return true;
+            case R.id.detalles_item_map:
+                muestraUbicacion(cursor.getString(4));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+    private void muestraUbicacion(String direccion){
+        Uri googleUri = Uri.parse("geo:0,0?q="+Uri.encode(direccion));
+
+        Log.d("encode",Uri.encode(direccion));
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW,googleUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+
+        startActivity(mapIntent);
     }
 
     @Override
