@@ -32,26 +32,38 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * ACTIVIDAD DE CREACION DE RESTAURANTE
+ * @author Ciprian George Lungu
+ */
 public class CrearRestauranteActivity extends AppCompatActivity {
-    private static final int REQUEST_CAMERA = 1;
-    private static final int REQUEST_PERMISOS = 2;
+    private static final int REQUEST_CAMERA = 1; //CAMARA
+    private static final int REQUEST_PERMISOS = 2; //PERMISOS
     ExternalFileManager efm;
-    RestaurantesAdapter ra;
-    GestorBBDDRestaurantes gr;
+    RestaurantesAdapter ra; //ADAPTADOR RESTAURANTE
+    GestorBBDDRestaurantes gr; //BASE DE DATOS
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crear_restaurante);
         efm = new ExternalFileManager();
-        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true); //ACTIVACION DE BOTON DE ATRAS
     }
 
+    /**
+     * CLICK Metodo que verifica que realmente el usuario ha permitido todos los permisos de camera,
+     * de escritura almacenamiento y lectura de almacenamiento externo
+     * que despues llama al metodo takephoto para tomar foto o pedir permiso en caso contrario
+     * @param view Coje el objeto desde el layout.
+     */
     public void addFoto(View view) {
         if (hasPermisoAccesoCamara() && hasPermisoEscrituraAlmacenamientoExterno() && hasPermisoLecturaAlmacenamientoExterno()) {
+            //SI TIENE TODOS LOS PERMISOS
             takePhoto();
-
         } else {
+            //NO ESTA LOS PERMISOS ACTIVADOS
+            //PREGUNTAMOS AL USUARIO PARA EL PERMISO
             ActivityCompat.requestPermissions(this,
                     new String[]{
                             Manifest.permission.CAMERA,
@@ -59,6 +71,10 @@ public class CrearRestauranteActivity extends AppCompatActivity {
                     REQUEST_PERMISOS);
         }
     }
+
+    /**
+     * Metodo para arrancar el intent de camera para captura fotografica.
+     */
     public void takePhoto(){
         Intent camera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (camera.resolveActivity(getPackageManager()) != null) {
@@ -69,11 +85,12 @@ public class CrearRestauranteActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CAMERA && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            Bundle extras = data.getExtras(); //COGE LOS DATOS EXTRAS DEL INTENT
+            Bitmap imageBitmap = (Bitmap) extras.get("data"); //COGE EXTRA DE FOTO
             ImageView imagenview = (ImageView)findViewById(R.id.view_imagen);
             imagenview.setImageBitmap(imageBitmap);
             try {
+                //GUARDAMOS EL FICHERO DENTRO DEL MOVIL
                 efm.guardarImagen(imageBitmap);
                 Toast.makeText(this, "Imagen almacenada", Toast.LENGTH_SHORT).show();
             } catch (Exception e){
@@ -83,6 +100,10 @@ public class CrearRestauranteActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * CLICK Metodo que añade a la base de datos los datos del restaurante
+     * @param view Coger el objeto del layout
+     */
     public void addRestaurante(View view) {
         EditText etNombre = (EditText)findViewById(R.id.etNombre);
         EditText etTelefono = (EditText)findViewById(R.id.etTelefono);
@@ -93,8 +114,8 @@ public class CrearRestauranteActivity extends AppCompatActivity {
         String direccion = etDireccion.getText().toString();
         String email = etEmail.getText().toString();
 
+        //VERIFICACION DE CAMPOS VACIOS.
         if(nombre.isEmpty()){
-            Log.d("campos","Algunos campos están vacios");
             Toast.makeText(this,"Campo nombre restaurante está vacío",
                     Toast.LENGTH_SHORT).show();
         }else if(direccion.isEmpty()){
@@ -104,38 +125,39 @@ public class CrearRestauranteActivity extends AppCompatActivity {
             Toast.makeText(this,"Campo email está vacío",
                     Toast.LENGTH_SHORT).show();
         }else{
+            //NO ESTÁN VACIOS LOS CAMPOS
+            //PROCEDEMOS EL ARRANQUE DE BASE DE DATOS
             try{
                 gr = new GestorBBDDRestaurantes(this);
                 Restaurante restaurante = new Restaurante(etNombre.getText().toString(),efm.fichero.getAbsolutePath(),Integer.parseInt(etTelefono.getText().toString()),
                         etDireccion.getText().toString(),etEmail.getText().toString());
 
-                Log.d("EXCEPTIONBBDD","persona creada"+etNombre.getText().toString()+efm.fichero.getAbsolutePath()+Integer.parseInt(etTelefono.getText().toString())+
-                        etDireccion.getText().toString()+etEmail.getText().toString());
                 gr.insertarRestaurante(restaurante);
 
+                //VACIAMOS LOS CAMPOS DESPUES DE INSERCION A LA BBDD
                 etNombre.setText("");
                 etTelefono.setText("");
                 etEmail.setText("");
                 etDireccion.setText("");
 
-
                 Toast.makeText(this, "Restaurante insertado correctamente.", Toast.LENGTH_SHORT).show();
             } catch (NumberFormatException e){
-                Toast.makeText(this,"Formato de telefono incorrecto",
+                Toast.makeText(this,"Formato de telefono incorrecto o está vacio.",
                         Toast.LENGTH_SHORT).show();
             }catch(NullPointerException e){
                 Toast.makeText(this,"No has tomado la foto.",
                         Toast.LENGTH_SHORT).show();
             }catch (Exception e){
-                Log.d("error", String.valueOf(e));
                 Toast.makeText(this,"Ha ocurrido un error al insertar el restaurante",
                         Toast.LENGTH_SHORT).show();
-                Log.d("EXCEPTIONBBDD","exception",e);
             }
         }
     }
 
-    //METODOS PARA DEVOLUCION DE PERMISOS DE CAMARA, ALMACENAMIENTO EXTERNO ETC.
+    /**
+     * Metodo booleano para verificar si la aplicacion tiene permiso de camara
+     * @return devuelve true(permitido) o false(no permitido)
+     */
     private boolean hasPermisoAccesoCamara(){
         boolean hasPermission=false;
         int permissionCheck = ContextCompat.checkSelfPermission(this,
@@ -145,6 +167,11 @@ public class CrearRestauranteActivity extends AppCompatActivity {
         }
         return hasPermission;
     }
+
+    /**
+     * Metodo booleano para verificar que tiene permiso de escritura de almacenamiento externo
+     * @return devuelve true o false del permiso
+     */
     private boolean hasPermisoEscrituraAlmacenamientoExterno(){
         boolean hasPermission=false;
         int permissionCheck = ContextCompat.checkSelfPermission(this,
@@ -154,6 +181,11 @@ public class CrearRestauranteActivity extends AppCompatActivity {
         }
         return hasPermission;
     }
+
+    /**
+     * Metodo booleano para verificar el permiso de acceso de lectura de almacenamiento externo
+     * @return devuelve true o false del permiso
+     */
     private boolean hasPermisoLecturaAlmacenamientoExterno(){
         boolean hasPermission=false;
         int permissionCheck = ContextCompat.checkSelfPermission(this,
@@ -183,15 +215,18 @@ public class CrearRestauranteActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
-
-            case android.R.id.home:
-                Log.d("menu","elegido el item android home");
+            case android.R.id.home: //BOTON ACTION ATRAS
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
-
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //cerramos BBDD
+        gr.cerrar();
+    }
 }

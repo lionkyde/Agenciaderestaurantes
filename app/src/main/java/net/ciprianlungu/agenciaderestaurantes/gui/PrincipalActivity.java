@@ -19,8 +19,15 @@ import net.ciprianlungu.agenciaderestaurantes.persistencia.GestorBBDDRestaurante
 
 import java.io.File;
 
+/**
+ * Actividad principal de la aplicacion.
+ * Se mostrará la lista de todos los restaurantes.
+ * Cuando se pulse click sobre uno de la lista de restaurante se accederá a otro intent de detalles
+ * @author Ciprian George Lungu
+ */
 public class PrincipalActivity extends AppCompatActivity {
     GestorBBDDRestaurantes gr;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,29 +45,24 @@ public class PrincipalActivity extends AppCompatActivity {
         lvListaRestaurantes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
+                    //LLAMADA A OTRO INTENT
                     Intent intent = new Intent(PrincipalActivity.this,DetallesRestaurante.class);
                     intent.putExtra("position",i);
                     startActivity(intent);
-
             }
         });
-
-
-
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_add,menu);
-
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
-            case R.id.iAnadir:
+            case R.id.iAnadir: //BOTON ANIADIR
                 Intent intent = new Intent(this,CrearRestauranteActivity.class);
                 startActivity(intent);
                 return true;
@@ -71,6 +73,7 @@ public class PrincipalActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        //cerramos la base de datos.
         gr.cerrar();
     }
 }

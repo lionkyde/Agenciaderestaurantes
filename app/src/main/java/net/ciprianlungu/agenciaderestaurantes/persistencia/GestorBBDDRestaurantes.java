@@ -10,19 +10,27 @@ import android.util.Log;
 import net.ciprianlungu.agenciaderestaurantes.modelo.Restaurante;
 
 /**
- * Created by Lionkyde on 15-Nov-17.
+ * Created by Ciprian George Lungu on 15-Nov-17.
+ * Clase que maneja la gestion de la base de datos
+ * Haciendo querys o actualizacion/modificacion de los datos.
  */
 
 public class GestorBBDDRestaurantes {
     DatabaseHelper dh;
 
+    /**
+     * Indicar al que estructurador utilizar.
+     * @param context
+     */
     public GestorBBDDRestaurantes(Context context){
         dh = new DatabaseHelper(context);
     }
 
-    //PARA AÑADIR RESTAURANTES
+    /**
+     * Metodo para insercion de la base de datos
+     * @param r Recibe un objeto Restaurante
+     */
     public void insertarRestaurante(Restaurante r){
-        Log.d("EXCEPTIONBBDD","He recibido los parametros"+r.getNombre()+r.getImagen()+r.getDireccion()+r.getTelefono()+r.getEmail());
         SQLiteDatabase sqLiteDatabase = dh.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
@@ -33,30 +41,44 @@ public class GestorBBDDRestaurantes {
         cv.put(DatabaseHelper.COLUMNAS[5],r.getEmail());
 
 
-        Log.d("gestorbbdd","recibiendo datos...");
         sqLiteDatabase.insert(DatabaseHelper.TABLA_RESTAURANTES,null,cv);
-        Log.d("gestorbbdd","acabo de meter en base de datos");
         sqLiteDatabase.close();
     }
-    //RECIBIR TODOS LOS RESTAURANTES
+
+    /**
+     * Metodo que recibe la consulta de todos los restaurantes de la base de datos
+     * @return devuelve un cursor de toda la consulta de BBDD
+     */
     public Cursor getRestaurantes(){
         SQLiteDatabase sqLiteDatabase = dh.getReadableDatabase();
         Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM "+DatabaseHelper.TABLA_RESTAURANTES, new String[] {});
         return c;
     }
 
+    /**
+     * Metodo para recibir un restaurante especifico con la consulta de un campo
+     * @param id el id del restaurante
+     * @return Devuelve un cursor de la consulta de la BBDD
+     */
     public Cursor getRestaurante(long id){
         SQLiteDatabase sqLiteDatabase = dh.getReadableDatabase();
         Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + DatabaseHelper.TABLA_RESTAURANTES + " WHERE "+DatabaseHelper.COLUMNAS[0] +" = "+id, new String[]{});
-
         return cursor;
     }
+
+    /**
+     * Metodo para borrar restaurante especifico.
+     * @param id el id del restaurante
+     */
     public void borrarRestaurante(int id){
         SQLiteDatabase sqLiteDatabase = dh.getWritableDatabase();
         sqLiteDatabase.delete(DatabaseHelper.TABLA_RESTAURANTES,"_id=?",new String[]{String.valueOf(id)});
         sqLiteDatabase.close();
     }
 
+    /**
+     * Metodo para cerrar sesion de la BBDD
+     */
     public void cerrar(){
         dh.close();
     }

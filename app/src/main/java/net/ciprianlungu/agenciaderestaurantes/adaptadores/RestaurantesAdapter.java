@@ -23,10 +23,16 @@ import java.io.File;
 
 
 /**
- * Created by Lionkyde on 15-Nov-17.
+ * Created by Ciprian George Lungu on 15-Nov-17.
+ *
  */
 
 public class RestaurantesAdapter extends CursorAdapter{
+    /**
+     * Constructor que recibe el contexto y el cursor
+     * @param context devuelve el context actual
+     * @param c uso de cursor para manejo de base de datos
+     */
     public RestaurantesAdapter(Context context, Cursor c){
         super(context, c, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
     }
@@ -38,16 +44,15 @@ public class RestaurantesAdapter extends CursorAdapter{
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
+        //BUSQUEDA DE IDS
         TextView tvNombre = (TextView)view.findViewById(R.id.tvNombre);
         ImageView imageview = (ImageView)view.findViewById(R.id.view_imagen);
         tvNombre.setText(cursor.getString(1));
 
+        //CARGA DE IMAGEN
         File imagen = new File(cursor.getString(2));
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
         Bitmap bitmap = BitmapFactory.decodeFile(imagen.getAbsolutePath(),bmOptions);
         imageview.setImageBitmap(bitmap);
-
-
-
     }
 }

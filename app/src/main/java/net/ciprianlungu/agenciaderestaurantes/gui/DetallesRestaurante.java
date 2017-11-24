@@ -37,11 +37,13 @@ import net.ciprianlungu.agenciaderestaurantes.persistencia.GestorBBDDRestaurante
 
 import java.io.File;
 
+/**
+ * ACTIVIDAD DE DETALLES DEL RESTAURANTE, DESPUES DE HABER CLICKEADO UNA DEL LISTVIEW.
+ * PARA VER LOS DETALLES DEL RESTAURANTE
+ * @author Ciprian George Lungu
+ */
 public class DetallesRestaurante extends AppCompatActivity implements SensorEventListener {
     private static final int REQUEST_PERMISO = 2;
-    private long lastUpdate = 0;
-    private float last_x, last_y, last_z;
-    private static final int SHAKE_THRESHOLD = 600;
 
     private ShareActionProvider mShareActionProvider;
     private SensorManager senSensorManager;
@@ -59,13 +61,18 @@ public class DetallesRestaurante extends AppCompatActivity implements SensorEven
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalles_restaurante);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true); //ACTIVACION DEL BOTON DE ATRÁS
+
+        //Guardamos los resultados de la consulta de base de datos de todos los restaurantes
+        //en un cursor
         cursor = gr.getRestaurantes();
 
+        //SENSOR
         senSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         senSensorManager.registerListener(this, senAccelerometer , SensorManager.SENSOR_DELAY_NORMAL);
 
+        //IDENTIFICACION DE TEXTVIEWS/IMAGEVIEWS
         tvNombre = (TextView)findViewById(R.id.detalles_tvNombre);
         imagenView = (ImageView)findViewById(R.id.detalles_imagen_restaurante);
         tvTelefono = (TextView)findViewById(R.id.detalles_tvTelefono);
@@ -74,13 +81,13 @@ public class DetallesRestaurante extends AppCompatActivity implements SensorEven
 
         //RECOGER LOS VARIABLES PASADOS AL INTENT
         Bundle bundle = getIntent().getExtras();
-
-        int position = (int) bundle.get("position"); //campo nombre
+        int position = (int) bundle.get("position"); //POSICION CURSOR
 
 
         if(cursor != null){
-            cursor.moveToPosition(position);
+            cursor.moveToPosition(position); //ACCESO A POSICION ESPECIFICA
 
+            //RELLENAMOS LOS CAMPOS CON LOS DATOS
             tvNombre.setText(cursor.getString(1));
             tvTelefono.setText(cursor.getString(3));
             tvDireccion.setText(cursor.getString(4));
@@ -94,12 +101,17 @@ public class DetallesRestaurante extends AppCompatActivity implements SensorEven
         }
     }
 
+    /**
+     * CLICK Metodo para mostrar los datos de la consulta de la siguiente posicion.
+     * @param v objeto de vista del layout
+     */
     public void siguiente(View v){
         Log.d("cursor","position:"+cursor.getPosition()+" count:"+cursor.getCount());
         if(cursor.getPosition() < (cursor.getCount()-1)){
             if(cursor != null && !cursor.isAfterLast()){
-                cursor.moveToNext();
+                cursor.moveToNext(); //MOVEMOS EL CURSOR AL SIGUIENTE POSICION
 
+                //RELLENAMOS LOS CAMPOS
                 tvNombre.setText(cursor.getString(1));
                 tvTelefono.setText(cursor.getString(3));
                 tvDireccion.setText(cursor.getString(4));
@@ -113,11 +125,17 @@ public class DetallesRestaurante extends AppCompatActivity implements SensorEven
             }
         }
     }
+
+    /**
+     * CLICK Metodo para mostrar los datos de la consulta de la posicion anterior del actual
+     * @param v objeto de vista del layout
+     */
     public void anterior(View v){
         if(cursor.getPosition() > 0){
             if(cursor != null && !cursor.isAfterLast()){
-                cursor.moveToPrevious();
+                cursor.moveToPrevious(); //movemos el cursor a la posicion anterior
 
+                //RELLENAMOS LOS CAMPOS
                 tvNombre.setText(cursor.getString(1));
                 tvTelefono.setText(cursor.getString(3));
                 tvDireccion.setText(cursor.getString(4));
@@ -131,10 +149,18 @@ public class DetallesRestaurante extends AppCompatActivity implements SensorEven
             }
         }
     }
+
+    /**
+     * CLICK Metodo para verificacion de permiso para hacer llamada de telefono.
+     * @param v
+     */
     public void llamar(View v){
         if(hasPermisoLlamar()){
+            //tiene permiso
             hacerLlamada();
         }else{
+            //No tiene permiso
+            //lo pedimos
             ActivityCompat.requestPermissions(this,
                     new String[]{
                         Manifest.permission.CALL_PHONE},
@@ -142,13 +168,21 @@ public class DetallesRestaurante extends AppCompatActivity implements SensorEven
         }
     }
 
+    /**
+     * Metodo de llamada de telefono
+     */
     public void hacerLlamada(){
         Intent callIntent = new Intent(Intent.ACTION_DIAL);
+        //el formato de string del telefono tiene que ser 'tel:numero'
         String telefono = "tel:"+cursor.getString(3);
         callIntent.setData(Uri.parse(telefono));
         startActivity(callIntent);
     }
 
+    /**
+     * Metodo booleano para comprobar el permiso para llamada
+     * @return devuelve true o false del pemiso
+     */
     private boolean hasPermisoLlamar(){
         boolean hasPermission = false;
         int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE);
@@ -178,7 +212,6 @@ public class DetallesRestaurante extends AppCompatActivity implements SensorEven
 
         //LOCALIZAR EL MENUITEM CON EL SHAREACTIONPROVIDER
         MenuItem item = menu.findItem(R.id.action_share);
-
         mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
 
         if (mShareActionProvider != null) {
@@ -187,58 +220,61 @@ public class DetallesRestaurante extends AppCompatActivity implements SensorEven
         return true;
     }
 
+    /**
+     * Estructura del intent con su mensaje personalizado para compartir el restaurante
+     * @return devuelve el intent de compartir
+     */
     private Intent createShareIntent(){
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("text/plain");
         shareIntent.putExtra(Intent.EXTRA_TEXT,"¡Estoy compartiendo un restaurante que me gustó! El restaurante "+cursor.getString(1));
-
         return shareIntent;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
-
-            case android.R.id.home:
-                Log.d("menu","elegido el item android home");
+            case android.R.id.home: //BOTON DE ATRAS
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
-            case R.id.action_delete:
+            case R.id.action_delete: //BOTON DE BORRAR
                 AlertDialog dialogo = dialogoBorrado();
-                dialogo.show();
+                dialogo.show(); //MOSTRAMOS EL DIALOGO
                 return true;
-            case R.id.detalles_item_map:
+            case R.id.detalles_item_map: //BOTON DE UBICACION GOOGLE MAPS
                 muestraUbicacion(cursor.getString(4));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    /**
+     * Metodo para abrir intent a la aplicacion de google maps con la localizacion del restaurante.
+     * @param direccion La direccion del restaurante
+     */
     private void muestraUbicacion(String direccion){
         Uri googleUri = Uri.parse("geo:0,0?q="+Uri.encode(direccion));
-
-        Log.d("encode",Uri.encode(direccion));
         Intent mapIntent = new Intent(Intent.ACTION_VIEW,googleUri);
         mapIntent.setPackage("com.google.android.apps.maps");
-
         startActivity(mapIntent);
     }
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
         Sensor mySensor = sensorEvent.sensor;
-
+        //Comprobamos otra vez que el sensor sea de tipo acelerometro
         if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             float x = sensorEvent.values[0];
             float y = sensorEvent.values[1];
             float z = sensorEvent.values[2];
 
             if(x > 8){
-                Log.d("sensorito","Izquerda "+String.valueOf(x));
                 if(cursor.getPosition() > 0){
                     if(cursor != null && !cursor.isAfterLast()){
-                        cursor.moveToPrevious();
+                        cursor.moveToPrevious(); //anterior cursor cuando gira izquerda
 
+                        //Rellenamos los campos
                         tvNombre.setText(cursor.getString(1));
                         tvTelefono.setText(cursor.getString(3));
                         tvDireccion.setText(cursor.getString(4));
@@ -251,13 +287,12 @@ public class DetallesRestaurante extends AppCompatActivity implements SensorEven
                         imagenView.setImageBitmap(bitmap);
                     }
                 }
-
             }else if(x < -8){
-                Log.d("sensorito","Derecha "+String.valueOf(x));
                 if(cursor.getPosition() < (cursor.getCount()-1)){
                     if(cursor != null && !cursor.isAfterLast()){
-                        cursor.moveToNext();
+                        cursor.moveToNext(); //movemos al siguiente cursor cuando gira derecha
 
+                        //Rellenamos los campos
                         tvNombre.setText(cursor.getString(1));
                         tvTelefono.setText(cursor.getString(3));
                         tvDireccion.setText(cursor.getString(4));
@@ -272,32 +307,36 @@ public class DetallesRestaurante extends AppCompatActivity implements SensorEven
                 }
             }
         }
-
     }
+
+    /**
+     * Metodo de dialogo para mostrar al usuario la confirmacion del borrado del usuario.
+     * En caso caso que confirma, se borra permanentemente el restaurante de la BBDD.
+     * @return devuelve el AlertDialog
+     */
     private AlertDialog dialogoBorrado(){
         AlertDialog borradoDialogo =new AlertDialog.Builder(this)
-                //set message, title, and icon
+                //Personalizacion del dialogo
                 .setTitle("Borrar")
                 .setMessage("¿Estás seguro que quieras borrar el restaurante?")
                 .setIcon(R.drawable.ic_action_delete)
-
                 .setPositiveButton("Borrar", new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int whichButton) {
                         //CODIGO DE BORRADO AQUI
                         try{
                             if(cursor != null){
-                                Log.d("cursor","La posicion actual de borrado es:"+cursor.getPosition());
-                                Log.d("cursor","El id del restaurante es:"+cursor.getString(0));
-
                                 gr.borrarRestaurante(Integer.parseInt(cursor.getString(0)));
                                 cursor = gr.getRestaurantes();
 
                                 Toast.makeText(getApplicationContext(),"Borrado con exito",Toast.LENGTH_SHORT).show();
                                 cursor = gr.getRestaurantes();
                                 if(cursor != null){
+                                    //Despues de borrado del restaurante, nos posicionamos en la
+                                    //primera posicion del cursor
                                     cursor.moveToFirst();
 
+                                    //RELLENAMOS LOS DATOS
                                     tvNombre.setText(cursor.getString(1));
                                     tvTelefono.setText(cursor.getString(3));
                                     tvDireccion.setText(cursor.getString(4));
@@ -311,27 +350,22 @@ public class DetallesRestaurante extends AppCompatActivity implements SensorEven
                                 }
                             }
                         }catch(CursorIndexOutOfBoundsException e){
+                            //EN CASO QUE CURSOR ESTA VACIO
+                            //QUE PUEDE PASAR CUANDO BORRES TODOS LOS RESTAURANTES
+                            //SE VAYA A LA ACTIVIDAD PRINCIPAL DE LISTADOS
                             NavUtils.navigateUpFromSameTask(getParent());
                         }
-
                         dialog.dismiss();
                     }
-
                 })
-
-
-
                 .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-
+                        //NO HACEMOS NADA
                         dialog.dismiss();
-
                     }
                 })
                 .create();
         return borradoDialogo;
-
-
     }
 
     @Override
@@ -341,13 +375,24 @@ public class DetallesRestaurante extends AppCompatActivity implements SensorEven
 
     @Override
     protected void onPause() {
+        //Cuando el programa o actividad está en modo pausa, que se pare el sensor
+        //para evitar consumos extra de aplicacion y bateria
         senSensorManager.unregisterListener(this);
         super.onPause();
     }
 
     @Override
     protected void onResume() {
+        //Cuando la actividad o programa vuelve a usar, arrancamos el listener para coger
+        //datos del sensor
         senSensorManager.registerListener(this,senAccelerometer,SensorManager.SENSOR_DELAY_NORMAL);
         super.onResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //Cerramos BBDD
+        gr.cerrar();
     }
 }

@@ -3,7 +3,8 @@ package net.ciprianlungu.agenciaderestaurantes.modelo;
 import android.util.Log;
 
 /**
- * Created by Lionkyde on 15-Nov-17.
+ * Created by Ciprian George Lungu on 15-Nov-17.
+ * Modelo de restaurante
  */
 
 public class Restaurante {
@@ -13,6 +14,14 @@ public class Restaurante {
     public String direccion;
     public String email;
 
+    /**
+     * Constructor de modelo de restaurante
+     * @param nombre Nombre del restaurante en String
+     * @param imagen Ruta del imagen dentro de la aplicacion movil en String
+     * @param telefono Numero de teleno de contacto del restaurante en Integer
+     * @param direccion Direccion del restaurante en String
+     * @param email Correo electronico del restaurante en String
+     */
     public Restaurante(String nombre, String imagen, int telefono, String direccion, String email) {
         this.nombre = nombre;
         this.imagen = imagen;
