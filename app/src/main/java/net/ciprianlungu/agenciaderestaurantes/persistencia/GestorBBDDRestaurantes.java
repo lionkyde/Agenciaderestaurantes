@@ -51,6 +51,12 @@ public class GestorBBDDRestaurantes {
 
         return cursor;
     }
+    public void borrarRestaurante(int id){
+        SQLiteDatabase sqLiteDatabase = dh.getWritableDatabase();
+        sqLiteDatabase.delete(DatabaseHelper.TABLA_RESTAURANTES,"_id=?",new String[]{String.valueOf(id)});
+        sqLiteDatabase.close();
+    }
+
     public void cerrar(){
         dh.close();
     }

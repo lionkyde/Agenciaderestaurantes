@@ -103,15 +103,17 @@ public class CrearRestauranteActivity extends AppCompatActivity {
             etTelefono.setText("");
             etEmail.setText("");
             etDireccion.setText("");
-            iv_imagen.setImageDrawable(null);
 
-            //ra.changeCursor(gr.getRestaurantes());
-            //ra.notifyDataSetChanged();
+
             Toast.makeText(this, "Restaurante insertado correctamente.", Toast.LENGTH_SHORT).show();
         } catch (NumberFormatException e){
             Toast.makeText(this,"Formato de telefono incorrecto",
                     Toast.LENGTH_SHORT).show();
-        } catch (Exception e){
+        }catch(NullPointerException e){
+            Toast.makeText(this,"No has tomado la foto.",
+                    Toast.LENGTH_SHORT).show();
+        }catch (Exception e){
+            Log.d("error", String.valueOf(e));
             Toast.makeText(this,"Ha ocurrido un error al insertar el restaurante",
                     Toast.LENGTH_SHORT).show();
             Log.d("EXCEPTIONBBDD","exception",e);
