@@ -2,6 +2,7 @@ package net.ciprianlungu.agenciaderestaurantes.gui;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -20,6 +21,7 @@ import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AlertDialog.Builder;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
@@ -202,33 +204,9 @@ public class DetallesRestaurante extends AppCompatActivity implements SensorEven
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
             case R.id.action_delete:
-                try{
-                    if(cursor != null){
-                        Log.d("cursor","La posicion actual de borrado es:"+cursor.getPosition());
-                        Log.d("cursor","El id del restaurante es:"+cursor.getString(0));
+                AlertDialog dialogo = dialogoBorrado();
+                dialogo.show();
 
-                        gr.borrarRestaurante(Integer.parseInt(cursor.getString(0)));
-                        cursor = gr.getRestaurantes();
-
-                        Toast.makeText(this,"Borrado con exito",Toast.LENGTH_SHORT).show();
-                        if(cursor != null){
-                            cursor.moveToFirst();
-
-                            tvNombre.setText(cursor.getString(1));
-                            tvTelefono.setText(cursor.getString(3));
-                            tvDireccion.setText(cursor.getString(4));
-                            tvEmail.setText(cursor.getString(5));
-
-                            //CARGA DE IMAGEN A PARTIR DEL EXTRA DE LA RUTA PASADA
-                            File imagen = new File(cursor.getString(2));
-                            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-                            Bitmap bitmap = BitmapFactory.decodeFile(imagen.getAbsolutePath(),bmOptions);
-                            imagenView.setImageBitmap(bitmap);
-                        }
-                    }
-                }catch(CursorIndexOutOfBoundsException e){
-                    NavUtils.navigateUpFromSameTask(this);
-                }
 
                 return true;
             default:
@@ -286,7 +264,65 @@ public class DetallesRestaurante extends AppCompatActivity implements SensorEven
         }
 
     }
+    private AlertDialog dialogoBorrado(){
+        AlertDialog borradoDialogo =new AlertDialog.Builder(this)
+                //set message, title, and icon
+                .setTitle("Borrar")
+                .setMessage("¿Estás seguro que quieras borrar el restaurante?")
+                .setIcon(R.drawable.ic_action_delete)
 
+                .setPositiveButton("Borrar", new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        //CODIGO DE BORRADO AQUI
+                        try{
+                            if(cursor != null){
+                                Log.d("cursor","La posicion actual de borrado es:"+cursor.getPosition());
+                                Log.d("cursor","El id del restaurante es:"+cursor.getString(0));
+
+                                gr.borrarRestaurante(Integer.parseInt(cursor.getString(0)));
+                                cursor = gr.getRestaurantes();
+
+                                Toast.makeText(getApplicationContext(),"Borrado con exito",Toast.LENGTH_SHORT).show();
+                                cursor = gr.getRestaurantes();
+                                if(cursor != null){
+                                    cursor.moveToFirst();
+
+                                    tvNombre.setText(cursor.getString(1));
+                                    tvTelefono.setText(cursor.getString(3));
+                                    tvDireccion.setText(cursor.getString(4));
+                                    tvEmail.setText(cursor.getString(5));
+
+                                    //CARGA DE IMAGEN A PARTIR DEL EXTRA DE LA RUTA PASADA
+                                    File imagen = new File(cursor.getString(2));
+                                    BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+                                    Bitmap bitmap = BitmapFactory.decodeFile(imagen.getAbsolutePath(),bmOptions);
+                                    imagenView.setImageBitmap(bitmap);
+                                }
+                            }
+                        }catch(CursorIndexOutOfBoundsException e){
+                            NavUtils.navigateUpFromSameTask(getParent());
+                        }
+
+                        dialog.dismiss();
+                    }
+
+                })
+
+
+
+                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        dialog.dismiss();
+
+                    }
+                })
+                .create();
+        return borradoDialogo;
+
+
+    }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
