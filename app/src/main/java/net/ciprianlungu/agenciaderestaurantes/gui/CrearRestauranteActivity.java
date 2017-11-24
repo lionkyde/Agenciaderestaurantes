@@ -89,37 +89,50 @@ public class CrearRestauranteActivity extends AppCompatActivity {
         EditText etEmail = (EditText)findViewById(R.id.etEmail);
         EditText etDireccion = (EditText)findViewById(R.id.etDireccion);
         ImageView iv_imagen = (ImageView)findViewById(R.id.view_imagen);
+        String nombre = etNombre.getText().toString();
+        String direccion = etDireccion.getText().toString();
+        String email = etEmail.getText().toString();
 
-        try{
-            gr = new GestorBBDDRestaurantes(this);
-            Restaurante restaurante = new Restaurante(etNombre.getText().toString(),efm.fichero.getAbsolutePath(),Integer.parseInt(etTelefono.getText().toString()),
-                    etDireccion.getText().toString(),etEmail.getText().toString());
-
-            Log.d("EXCEPTIONBBDD","persona creada"+etNombre.getText().toString()+efm.fichero.getAbsolutePath()+Integer.parseInt(etTelefono.getText().toString())+
-                    etDireccion.getText().toString()+etEmail.getText().toString());
-            gr.insertarRestaurante(restaurante);
-
-            etNombre.setText("");
-            etTelefono.setText("");
-            etEmail.setText("");
-            etDireccion.setText("");
-
-
-            Toast.makeText(this, "Restaurante insertado correctamente.", Toast.LENGTH_SHORT).show();
-        } catch (NumberFormatException e){
-            Toast.makeText(this,"Formato de telefono incorrecto",
+        if(nombre.isEmpty()){
+            Log.d("campos","Algunos campos están vacios");
+            Toast.makeText(this,"Campo nombre restaurante está vacío",
                     Toast.LENGTH_SHORT).show();
-        }catch(NullPointerException e){
-            Toast.makeText(this,"No has tomado la foto.",
+        }else if(direccion.isEmpty()){
+            Toast.makeText(this,"Campo dirección postal está vacío.",
                     Toast.LENGTH_SHORT).show();
-        }catch (Exception e){
-            Log.d("error", String.valueOf(e));
-            Toast.makeText(this,"Ha ocurrido un error al insertar el restaurante",
+        }else if(email.isEmpty()){
+            Toast.makeText(this,"Campo email está vacío",
                     Toast.LENGTH_SHORT).show();
-            Log.d("EXCEPTIONBBDD","exception",e);
+        }else{
+            try{
+                gr = new GestorBBDDRestaurantes(this);
+                Restaurante restaurante = new Restaurante(etNombre.getText().toString(),efm.fichero.getAbsolutePath(),Integer.parseInt(etTelefono.getText().toString()),
+                        etDireccion.getText().toString(),etEmail.getText().toString());
+
+                Log.d("EXCEPTIONBBDD","persona creada"+etNombre.getText().toString()+efm.fichero.getAbsolutePath()+Integer.parseInt(etTelefono.getText().toString())+
+                        etDireccion.getText().toString()+etEmail.getText().toString());
+                gr.insertarRestaurante(restaurante);
+
+                etNombre.setText("");
+                etTelefono.setText("");
+                etEmail.setText("");
+                etDireccion.setText("");
+
+
+                Toast.makeText(this, "Restaurante insertado correctamente.", Toast.LENGTH_SHORT).show();
+            } catch (NumberFormatException e){
+                Toast.makeText(this,"Formato de telefono incorrecto",
+                        Toast.LENGTH_SHORT).show();
+            }catch(NullPointerException e){
+                Toast.makeText(this,"No has tomado la foto.",
+                        Toast.LENGTH_SHORT).show();
+            }catch (Exception e){
+                Log.d("error", String.valueOf(e));
+                Toast.makeText(this,"Ha ocurrido un error al insertar el restaurante",
+                        Toast.LENGTH_SHORT).show();
+                Log.d("EXCEPTIONBBDD","exception",e);
+            }
         }
-
-
     }
 
     //METODOS PARA DEVOLUCION DE PERMISOS DE CAMARA, ALMACENAMIENTO EXTERNO ETC.

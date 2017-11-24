@@ -1,12 +1,17 @@
 package net.ciprianlungu.agenciaderestaurantes.gui;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,6 +19,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
@@ -29,9 +35,16 @@ import net.ciprianlungu.agenciaderestaurantes.persistencia.GestorBBDDRestaurante
 
 import java.io.File;
 
-public class DetallesRestaurante extends AppCompatActivity {
+public class DetallesRestaurante extends AppCompatActivity implements SensorEventListener {
     private static final int REQUEST_PERMISO = 2;
+    private long lastUpdate = 0;
+    private float last_x, last_y, last_z;
+    private static final int SHAKE_THRESHOLD = 600;
+
     private ShareActionProvider mShareActionProvider;
+    private SensorManager senSensorManager;
+    private Sensor senAccelerometer;
+
     GestorBBDDRestaurantes gr = new GestorBBDDRestaurantes(this);
     Cursor cursor;
     TextView tvNombre;
@@ -46,6 +59,10 @@ public class DetallesRestaurante extends AppCompatActivity {
         setContentView(R.layout.activity_detalles_restaurante);
         getSupportActionBar().setHomeButtonEnabled(true);
         cursor = gr.getRestaurantes();
+
+        senSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        senSensorManager.registerListener(this, senAccelerometer , SensorManager.SENSOR_DELAY_NORMAL);
 
         tvNombre = (TextView)findViewById(R.id.detalles_tvNombre);
         imagenView = (ImageView)findViewById(R.id.detalles_imagen_restaurante);
@@ -217,5 +234,74 @@ public class DetallesRestaurante extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        Sensor mySensor = sensorEvent.sensor;
+
+        if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            float x = sensorEvent.values[0];
+            float y = sensorEvent.values[1];
+            float z = sensorEvent.values[2];
+
+            if(x > 8){
+                Log.d("sensorito","Izquerda "+String.valueOf(x));
+                if(cursor.getPosition() > 0){
+                    if(cursor != null && !cursor.isAfterLast()){
+                        cursor.moveToPrevious();
+
+                        tvNombre.setText(cursor.getString(1));
+                        tvTelefono.setText(cursor.getString(3));
+                        tvDireccion.setText(cursor.getString(4));
+                        tvEmail.setText(cursor.getString(5));
+
+                        //CARGA DE IMAGEN A PARTIR DEL EXTRA DE LA RUTA PASADA
+                        File imagen = new File(cursor.getString(2));
+                        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+                        Bitmap bitmap = BitmapFactory.decodeFile(imagen.getAbsolutePath(),bmOptions);
+                        imagenView.setImageBitmap(bitmap);
+                    }
+                }
+
+            }else if(x < -8){
+                Log.d("sensorito","Derecha "+String.valueOf(x));
+                if(cursor.getPosition() < (cursor.getCount()-1)){
+                    if(cursor != null && !cursor.isAfterLast()){
+                        cursor.moveToNext();
+
+                        tvNombre.setText(cursor.getString(1));
+                        tvTelefono.setText(cursor.getString(3));
+                        tvDireccion.setText(cursor.getString(4));
+                        tvEmail.setText(cursor.getString(5));
+
+                        //CARGA DE IMAGEN A PARTIR DEL EXTRA DE LA RUTA PASADA
+                        File imagen = new File(cursor.getString(2));
+                        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+                        Bitmap bitmap = BitmapFactory.decodeFile(imagen.getAbsolutePath(),bmOptions);
+                        imagenView.setImageBitmap(bitmap);
+                    }
+                }
+            }
+        }
+
+    }
+
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+
+    }
+
+    @Override
+    protected void onPause() {
+        senSensorManager.unregisterListener(this);
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        senSensorManager.registerListener(this,senAccelerometer,SensorManager.SENSOR_DELAY_NORMAL);
+        super.onResume();
     }
 }
