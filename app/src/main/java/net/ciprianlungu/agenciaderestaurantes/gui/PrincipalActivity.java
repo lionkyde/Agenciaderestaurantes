@@ -33,6 +33,10 @@ public class PrincipalActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_principal);
 
+        mostradorLista();
+    }
+
+    private void mostradorLista(){
         gr = new GestorBBDDRestaurantes(this);
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
                 R.layout.listview_filas_restaurantes,
@@ -45,14 +49,14 @@ public class PrincipalActivity extends AppCompatActivity {
         lvListaRestaurantes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    //LLAMADA A OTRO INTENT
-                    Intent intent = new Intent(PrincipalActivity.this,DetallesRestaurante.class);
-                    intent.putExtra("position",i);
-                    startActivity(intent);
+                //LLAMADA A OTRO INTENT
+                Log.d("prueba","he pulsado");
+                Intent intent = new Intent(PrincipalActivity.this,DetallesRestaurante.class);
+                intent.putExtra("position",i);
+                startActivity(intent);
             }
         });
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_add,menu);
@@ -68,6 +72,12 @@ public class PrincipalActivity extends AppCompatActivity {
                 return true;
         }
         return false;
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        mostradorLista();
     }
 
     @Override
