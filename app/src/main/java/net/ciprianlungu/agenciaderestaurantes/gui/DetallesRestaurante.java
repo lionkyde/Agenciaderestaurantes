@@ -107,22 +107,34 @@ public class DetallesRestaurante extends AppCompatActivity implements SensorEven
      */
     public void siguiente(View v){
         Log.d("cursor","position:"+cursor.getPosition()+" count:"+cursor.getCount());
-        if(cursor.getPosition() < (cursor.getCount()-1)){
-            if(cursor != null && !cursor.isAfterLast()){
-                cursor.moveToNext(); //MOVEMOS EL CURSOR AL SIGUIENTE POSICION
+        if(cursor.isLast()){
+            //ESTOY EN ULTIMA POSICION
+            cursor.moveToFirst();
+            Log.d("cursor","Next: "+cursor.getPosition());
+            tvNombre.setText(cursor.getString(1));
+            tvTelefono.setText(cursor.getString(3));
+            tvDireccion.setText(cursor.getString(4));
+            tvEmail.setText(cursor.getString(5));
 
-                //RELLENAMOS LOS CAMPOS
-                tvNombre.setText(cursor.getString(1));
-                tvTelefono.setText(cursor.getString(3));
-                tvDireccion.setText(cursor.getString(4));
-                tvEmail.setText(cursor.getString(5));
+            //CARGA DE IMAGEN A PARTIR DEL EXTRA DE LA RUTA PASADA
+            File imagen = new File(cursor.getString(2));
+            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+            Bitmap bitmap = BitmapFactory.decodeFile(imagen.getAbsolutePath(),bmOptions);
+            imagenView.setImageBitmap(bitmap);
+        }else{
+            //NO ESTOY EN ULTIMA POSICION
+            cursor.moveToNext();
+            Log.d("cursor","Next: "+cursor.getPosition());
+            tvNombre.setText(cursor.getString(1));
+            tvTelefono.setText(cursor.getString(3));
+            tvDireccion.setText(cursor.getString(4));
+            tvEmail.setText(cursor.getString(5));
 
-                //CARGA DE IMAGEN A PARTIR DEL EXTRA DE LA RUTA PASADA
-                File imagen = new File(cursor.getString(2));
-                BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-                Bitmap bitmap = BitmapFactory.decodeFile(imagen.getAbsolutePath(),bmOptions);
-                imagenView.setImageBitmap(bitmap);
-            }
+            //CARGA DE IMAGEN A PARTIR DEL EXTRA DE LA RUTA PASADA
+            File imagen = new File(cursor.getString(2));
+            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+            Bitmap bitmap = BitmapFactory.decodeFile(imagen.getAbsolutePath(),bmOptions);
+            imagenView.setImageBitmap(bitmap);
         }
     }
 
@@ -131,22 +143,32 @@ public class DetallesRestaurante extends AppCompatActivity implements SensorEven
      * @param v objeto de vista del layout
      */
     public void anterior(View v){
-        if(cursor.getPosition() > 0){
-            if(cursor != null && !cursor.isAfterLast()){
-                cursor.moveToPrevious(); //movemos el cursor a la posicion anterior
+        if(cursor.isFirst()){
+            //ESTOY EN PRIMERA POSICION
+            cursor.moveToLast();
+            tvNombre.setText(cursor.getString(1));
+            tvTelefono.setText(cursor.getString(3));
+            tvDireccion.setText(cursor.getString(4));
+            tvEmail.setText(cursor.getString(5));
 
-                //RELLENAMOS LOS CAMPOS
-                tvNombre.setText(cursor.getString(1));
-                tvTelefono.setText(cursor.getString(3));
-                tvDireccion.setText(cursor.getString(4));
-                tvEmail.setText(cursor.getString(5));
+            //CARGA DE IMAGEN A PARTIR DEL EXTRA DE LA RUTA PASADA
+            File imagen = new File(cursor.getString(2));
+            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+            Bitmap bitmap = BitmapFactory.decodeFile(imagen.getAbsolutePath(),bmOptions);
+            imagenView.setImageBitmap(bitmap);
+        }else{
+            //NO ESTOY EN PRIMERA POSICION
+            cursor.moveToPrevious();
+            tvNombre.setText(cursor.getString(1));
+            tvTelefono.setText(cursor.getString(3));
+            tvDireccion.setText(cursor.getString(4));
+            tvEmail.setText(cursor.getString(5));
 
-                //CARGA DE IMAGEN A PARTIR DEL EXTRA DE LA RUTA PASADA
-                File imagen = new File(cursor.getString(2));
-                BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-                Bitmap bitmap = BitmapFactory.decodeFile(imagen.getAbsolutePath(),bmOptions);
-                imagenView.setImageBitmap(bitmap);
-            }
+            //CARGA DE IMAGEN A PARTIR DEL EXTRA DE LA RUTA PASADA
+            File imagen = new File(cursor.getString(2));
+            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+            Bitmap bitmap = BitmapFactory.decodeFile(imagen.getAbsolutePath(),bmOptions);
+            imagenView.setImageBitmap(bitmap);
         }
     }
 
@@ -163,7 +185,7 @@ public class DetallesRestaurante extends AppCompatActivity implements SensorEven
             //lo pedimos
             ActivityCompat.requestPermissions(this,
                     new String[]{
-                        Manifest.permission.CALL_PHONE},
+                            Manifest.permission.CALL_PHONE},
                     REQUEST_PERMISO);
         }
     }
@@ -367,6 +389,19 @@ public class DetallesRestaurante extends AppCompatActivity implements SensorEven
                 .create();
         return borradoDialogo;
     }
+    public void mostrarContenido(){
+        //RELLENAMOS LOS DATOS
+        tvNombre.setText(cursor.getString(1));
+        tvTelefono.setText(cursor.getString(3));
+        tvDireccion.setText(cursor.getString(4));
+        tvEmail.setText(cursor.getString(5));
+
+        //CARGA DE IMAGEN A PARTIR DEL EXTRA DE LA RUTA PASADA
+        File imagen = new File(cursor.getString(2));
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        Bitmap bitmap = BitmapFactory.decodeFile(imagen.getAbsolutePath(),bmOptions);
+        imagenView.setImageBitmap(bitmap);
+    }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
@@ -387,6 +422,12 @@ public class DetallesRestaurante extends AppCompatActivity implements SensorEven
         //datos del sensor
         senSensorManager.registerListener(this,senAccelerometer,SensorManager.SENSOR_DELAY_NORMAL);
         super.onResume();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        NavUtils.navigateUpFromSameTask(this);
     }
 
     @Override

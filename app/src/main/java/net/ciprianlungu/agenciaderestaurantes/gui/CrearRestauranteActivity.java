@@ -224,9 +224,8 @@ public class CrearRestauranteActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        //cerramos BBDD
-        gr.cerrar();
+    public void onBackPressed() {
+        super.onBackPressed();
+        NavUtils.navigateUpFromSameTask(this);
     }
 }
