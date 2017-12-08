@@ -28,4 +28,7 @@ dependencies {
 
     //LIBRERIA GLIDE PARA MULTIMEDIA.
     compile 'com.github.bumptech.glide:glide:3.8.0'
+
+    //LIBRERIA DE TOASTS
+    compile 'com.github.GrenderG:Toasty:1.2.5'
 }

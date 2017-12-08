@@ -37,6 +37,8 @@ import net.ciprianlungu.agenciaderestaurantes.persistencia.GestorBBDDRestaurante
 
 import java.io.File;
 
+import es.dmoral.toasty.Toasty;
+
 /**
  * ACTIVIDAD DE DETALLES DEL RESTAURANTE, DESPUES DE HABER CLICKEADO UNA DEL LISTVIEW.
  * PARA VER LOS DETALLES DEL RESTAURANTE
@@ -83,7 +85,7 @@ public class DetallesRestaurante extends AppCompatActivity implements SensorEven
         Bundle bundle = getIntent().getExtras();
         int position = (int) bundle.get("position"); //POSICION CURSOR
 
-
+        //CARGAMOS EL CURSOR CON LA CONSULTA.
         if(cursor != null){
             cursor.moveToPosition(position); //ACCESO A POSICION ESPECIFICA
 
@@ -106,11 +108,9 @@ public class DetallesRestaurante extends AppCompatActivity implements SensorEven
      * @param v objeto de vista del layout
      */
     public void siguiente(View v){
-        Log.d("cursor","position:"+cursor.getPosition()+" count:"+cursor.getCount());
         if(cursor.isLast()){
             //ESTOY EN ULTIMA POSICION
             cursor.moveToFirst();
-            Log.d("cursor","Next: "+cursor.getPosition());
             tvNombre.setText(cursor.getString(1));
             tvTelefono.setText(cursor.getString(3));
             tvDireccion.setText(cursor.getString(4));
@@ -124,7 +124,6 @@ public class DetallesRestaurante extends AppCompatActivity implements SensorEven
         }else{
             //NO ESTOY EN ULTIMA POSICION
             cursor.moveToNext();
-            Log.d("cursor","Next: "+cursor.getPosition());
             tvNombre.setText(cursor.getString(1));
             tvTelefono.setText(cursor.getString(3));
             tvDireccion.setText(cursor.getString(4));
@@ -221,7 +220,7 @@ public class DetallesRestaurante extends AppCompatActivity implements SensorEven
                 if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                     hacerLlamada();
                 }else{
-                    Toast.makeText(this,"Sin permiso de llamada, no puedo efectuar la llamada.", Toast.LENGTH_SHORT).show();
+                    Toasty.warning(this, "Sin permiso de llamada, no puedo efectuar la llamada.", Toast.LENGTH_SHORT).show();
                 }
                 return;
             }

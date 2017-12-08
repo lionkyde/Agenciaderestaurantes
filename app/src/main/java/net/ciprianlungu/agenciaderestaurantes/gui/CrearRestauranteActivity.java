@@ -32,6 +32,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import es.dmoral.toasty.Toasty;
+
 /**
  * ACTIVIDAD DE CREACION DE RESTAURANTE
  * @author Ciprian George Lungu
@@ -92,9 +94,9 @@ public class CrearRestauranteActivity extends AppCompatActivity {
             try {
                 //GUARDAMOS EL FICHERO DENTRO DEL MOVIL
                 efm.guardarImagen(imageBitmap);
-                Toast.makeText(this, "Imagen almacenada", Toast.LENGTH_SHORT).show();
+                Toasty.info(this,"Imagen almacenada con exito.",Toast.LENGTH_SHORT,true).show();
             } catch (Exception e){
-                Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toasty.error(this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
 
         }
@@ -116,14 +118,14 @@ public class CrearRestauranteActivity extends AppCompatActivity {
 
         //VERIFICACION DE CAMPOS VACIOS.
         if(nombre.isEmpty()){
-            Toast.makeText(this,"Campo nombre restaurante está vacío",
-                    Toast.LENGTH_SHORT).show();
+            Toasty.warning(this,"Campo nombre restaurante está vacío",
+                    Toast.LENGTH_SHORT,true).show();
         }else if(direccion.isEmpty()){
-            Toast.makeText(this,"Campo dirección postal está vacío.",
-                    Toast.LENGTH_SHORT).show();
+            Toasty.warning(this,"Campo dirección postal está vacío.",
+                    Toast.LENGTH_SHORT , true).show();
         }else if(email.isEmpty()){
-            Toast.makeText(this,"Campo email está vacío",
-                    Toast.LENGTH_SHORT).show();
+            Toasty.warning(this,"Campo email está vacío",
+                    Toast.LENGTH_SHORT , true).show();
         }else{
             //NO ESTÁN VACIOS LOS CAMPOS
             //PROCEDEMOS EL ARRANQUE DE BASE DE DATOS
@@ -140,16 +142,16 @@ public class CrearRestauranteActivity extends AppCompatActivity {
                 etEmail.setText("");
                 etDireccion.setText("");
 
-                Toast.makeText(this, "Restaurante insertado correctamente.", Toast.LENGTH_SHORT).show();
+                Toasty.success(this, "Restaurante insertado correctamente.", Toast.LENGTH_SHORT , true).show();
             } catch (NumberFormatException e){
-                Toast.makeText(this,"Formato de telefono incorrecto o está vacio.",
-                        Toast.LENGTH_SHORT).show();
+                Toasty.warning(this,"Formato de telefono incorrecto o está vacio.",
+                        Toast.LENGTH_SHORT, true).show();
             }catch(NullPointerException e){
-                Toast.makeText(this,"No has tomado la foto.",
-                        Toast.LENGTH_SHORT).show();
+                Toasty.warning(this,"No has tomado la foto.",
+                        Toast.LENGTH_SHORT,true).show();
             }catch (Exception e){
-                Toast.makeText(this,"Ha ocurrido un error al insertar el restaurante",
-                        Toast.LENGTH_SHORT).show();
+                Toasty.error(this,"Ha ocurrido un error al insertar el restaurante",
+                        Toast.LENGTH_SHORT,true).show();
             }
         }
     }
@@ -205,7 +207,7 @@ public class CrearRestauranteActivity extends AppCompatActivity {
                         && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
                     takePhoto();
                 } else {
-                    Toast.makeText(this, "No tenemos permiso para las fotos", Toast.LENGTH_SHORT).show();
+                    Toasty.warning(this, "No tenemos permiso para las fotos", Toast.LENGTH_SHORT, true).show();
                 }
                 return;
             }

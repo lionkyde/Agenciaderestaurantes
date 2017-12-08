@@ -3,6 +3,7 @@ package net.ciprianlungu.agenciaderestaurantes.gui;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Environment;
+import android.support.annotation.ColorInt;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,6 +19,8 @@ import net.ciprianlungu.agenciaderestaurantes.R;
 import net.ciprianlungu.agenciaderestaurantes.persistencia.GestorBBDDRestaurantes;
 
 import java.io.File;
+
+import es.dmoral.toasty.Toasty;
 
 /**
  * Actividad principal de la aplicacion.
@@ -36,6 +39,9 @@ public class PrincipalActivity extends AppCompatActivity {
         mostradorLista();
     }
 
+    /**
+     * Metodo de mostrador de la lista con listview, consultando a la base de datos.
+     */
     private void mostradorLista(){
         gr = new GestorBBDDRestaurantes(this);
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
@@ -57,6 +63,8 @@ public class PrincipalActivity extends AppCompatActivity {
             }
         });
     }
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_add,menu);
